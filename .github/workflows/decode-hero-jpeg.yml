@@ -1,22 +1,23 @@
-name: Decode hero JPEG
+name: Fetch hero JPEG
 on:
+  workflow_dispatch:
   push:
     paths:
-      - 'cpm-intensive-hero-email-600.jpg.b64'
-  workflow_dispatch:
+      - '.github/workflows/decode-hero-jpeg.yml'
 jobs:
-  decode:
+  fetch:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Decode and commit JPEG
+      - name: Download JPEG and commit
         run: |
-          base64 -d cpm-intensive-hero-email-600.jpg.b64 > cpm-intensive-hero-email-600.jpg
+          curl -fsSL -o cpm-intensive-hero-email-600.jpg https://i.imgur.com/fkMPM1I.jpeg
           file cpm-intensive-hero-email-600.jpg
+          ls -la cpm-intensive-hero-email-600.jpg
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add cpm-intensive-hero-email-600.jpg
-          git commit -m "Add decoded CPM Intensive hero JPEG" || echo "No changes"
+          git commit -m "Add CPM Intensive hero JPEG for Resend broadcast" || echo "No changes"
           git push
